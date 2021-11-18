@@ -1,4 +1,4 @@
-
+import Data.Char
 -- calc Faculty rekursiv
 
 fakul1 n = if (n == 0)
@@ -10,10 +10,12 @@ fakul1 n = if (n == 0)
 fakul0 n | n == 0 = 1
     | otherwise = fakul0(n - 1)
 
--- Faculty iterative using Akkumolator 
+-- Faculty iterative Akkumolator 
 
 fakul2 n = fakulAkku n 1
     where fakulAkku n akku = if (n == 0) then akku else fakulAkku (n-1) (n * akku)
+
+
 
 
 -- fibonacci recursion
@@ -21,6 +23,7 @@ fakul2 n = fakulAkku n 1
 fiborek 0 = 0
 fiborek 1 = 1
 fiborek n = fiborek(n - 1) + fiborek(n - 2)
+
 
 
 -- fibonacci iterativ
@@ -106,6 +109,7 @@ kaufen x = kaufHelper x 10 0
                                     then bezahlt 
                                     else kaufHelper (rest - currpreis) (currpreis + 10) (bezahlt + currpreis)
 
+
 -- check if an element is in a given list -- returns a bool value
 elem5 :: (Eq a) => a -> [a] -> Bool
 elem5 a [] = False
@@ -136,18 +140,71 @@ sublist n m (x:xs) = sublist (n + 1) m xs
 
 getrev xs = if null xs then xs else getrev (tail xs) ++ [head xs]
 
+getre = (\xs -> getre (tail xs) ++ [head xs])
+
+inc :: Num a => [a] -> [a]
+inc xs = foldl go (\_ _ acc -> acc) xs id (+ 1) []
+    where go run x f g acc = run g f (f x: acc)
+
+
 -- check for palindrom
 checkPalindrom xs = if (getrev xs == xs) then True
                 else False
-
-
-
 
 -- unterliste 
 unterListe:: Int -> Int -> [a] -> [a]
 unterListe a b [] = []
 unterListe 0 0 xs = []
 unterListe a b xs = drop a ( take b xs)
+
+-- (a)
+
+--iterative
+potenzIter :: Integer -> Integer -> Integer
+potenzIter n 0 = 1
+potenzIter 0 m = 0
+potenzIter n m = potenAkk n m n
+        where potenAkk n m temp = if (m <= 1) then temp 
+                else potenAkk n (m - 1) (temp * n)
+
+
+-- recursive
+potenzRec :: Integer -> Integer -> Integer
+potenzRec n 0 = 1
+potenzRec 0 m = 0
+potenzRec n m = n * potenzRec n (m - 1)
+
+-- recursive
+
+--(b)
+
+-- recursive
+pPotenzRec::(Integral a, Integral a ) => a -> a -> a 
+pPotenzRec n 0 = 1
+pPotenzRec 0 m = 0
+pPotenzRec n m = n * pPotenzRec n (m - 1)
+
+--Iterative
+pPotenzIter::(Integral a, Integral a ) => a -> a -> a 
+pPotenzIter n 0 = 1
+pPotenzIter 0 m = 0
+pPotenzIter n m = potenAkk n m n
+        where potenAkk n m temp = if (m <= 1) then temp 
+                else potenAkk n (m - 1) (temp * n)
+
+--(c)
+
+quadrat::(Integral a, Integral a ) => a -> a
+quadrat n = pPotenzRec n 2
+
+drittenPotenz::(Integral a, Integral a ) => a -> a
+drittenPotenz n = pPotenzRec n 3
+
+--(d)
+
+--Integral (Int, Integer)
+
+
 
 -- fibonacci sequence
 fib::Int->[Int]
@@ -157,6 +214,69 @@ fib n = (head (fib (n-1)) + head (fib (n-2))) : fib (n-1)
 
 -- list of paar to paar of list
 listeZuPaar :: [(String,Int)] -> ([String] ,[Int])
+--listeZuPaar xs = (map fst xs, map snd xs)
 listeZuPaar [] = error "List is Empty"
 listeZuPaar xs = ([a | (a, _) <- xs], [b | (_, b) <- xs])
 
+
+--
+
+
+
+fun1:: Int -> Int -> Bool
+fun1 = (<)
+
+fun2:: [Int]-> [Int]
+fun2 = (++[1..10])
+
+fun3:: Int -> Int 
+fun3 x = (\x -> x + 1) x
+ 
+fu x y = (== 3) (x + y)
+
+
+
+fo::(Foldable t, Integral b) => b -> t b -> b
+fo = foldr (-)
+
+
+f::(Integral a) => [a] -> [a]
+f [] = f [1]
+f xs = xs
+
+fi::(Integral a) => a -> a
+fi = (+2)
+
+fa::(Integral a) => a -> a
+fa x = (\x -> x) x
+
+map' ::(a -> b) -> [a] -> [b]
+map' f [] = []
+map' f xs = foldr (\x akk -> f x : akk) [] xs
+
+take_while'':: Int -> [Int] -> [Int]
+take_while'' 0 xs =[]
+take_while'' a (x:xs) = x:take_while'' (a - 1) xs
+
+map'' ::(a -> b) -> [a] -> [b]
+map'' _ [] = []
+map'' f (x:xs) = f x : map' f xs
+
+take_while :: (a -> Bool) -> [a] -> [a]
+take_while a [] = []
+take_while a (x:xs) = if a x
+            then x : take_while a xs
+            else []
+
+take_while' :: (a -> Bool) -> [a] -> [a]
+take_while' a = foldr (\x ys -> if a x then x:ys else []) []
+
+
+editext x = foldr (++) "" (editit (words x))
+            where
+            editit [] = []
+            editit (x:xs) = makeUpper x : editit xs
+                where
+                    makeUpper (x:xs) | isLower x = toUpper x : xs
+
+                    
